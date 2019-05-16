@@ -1,0 +1,42 @@
+version: '2'
+services:
+  web:
+    container_name: API_REST
+    build: ./
+    links:
+      - db
+    ports:
+      - 8888:8888
+    depends_on:
+      - db
+  db:
+    container_name: MONGODB
+    image: mongo
+    expose:
+      - "27017"
+    volumes:
+        - mongodata:/data/db
+
+volumes:
+  mongodata:
+
+
+# app:
+#   build: ./
+  # depends_on:
+  #   - db
+#   ports:
+#     - 8888:8888
+  
+#   environment:
+#     - NODE_ENV=development
+#     - PORT=8888
+# db: 
+#   image: mongo
+#   expose:
+#     - "27017"
+#   volumes:
+#     mongodata:/data/db   
+
+# volumes:
+#   mongodata:
