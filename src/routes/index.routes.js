@@ -3,7 +3,7 @@ import { Router } from 'express'
 const router = Router();
 
 router.get('/', (req, res) => {
-    res.send('Welcome to my api')
+    res.json('Deck microservice')
 })
 
 export default router; 
