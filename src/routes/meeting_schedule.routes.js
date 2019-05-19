@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { connect } from '../database'
 import { ObjectID } from 'mongodb'
+import {test} from '../server'
 const router = Router();
 
 const collection = 'meeting_schedules'
@@ -18,10 +19,9 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     const db = await connect();
     try {
-        const { time, meeting_point_id } = req.body.meeting_schedule;
+        const { time } = req.body.meeting_schedule;
         const data = {
             time: time,
-            meeting_point_id: meeting_point_id,
         }
         const result = await db.collection(collection).insert(data);
         res.send(result);
@@ -46,26 +46,6 @@ router.put('/:id', async (req, res) => {
 })
 
 
-router.get('/points', async (req, res) => {
-    try {
-        const db = await connect();
-        const result = await db.collection(collection).aggregate([
-            { "$addFields": { "meeting_point_id": { "$toString": "$_id" }}},
-            {
-                $lookup:
-                {
-                    from: 'meeting_points',
-                    localField: 'meeting_point_id',
-                    foreignField: 'meeting_point_id',
-                    as: 'meeting_points'
-                }
-            }]).toArray(); //findOne({ _id: ObjectID(id) });
-        res.json(result)
-    } catch (error) {
-        res.status(500).json({ error: error.toString() });
-    }
-
-})
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
     try {

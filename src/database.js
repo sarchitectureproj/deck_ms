@@ -4,7 +4,8 @@ export async function connect() {
     try {
 //        const client = await MongoClient.connect('mongodb://db:27017', {
         const client = await MongoClient.connect('mongodb://localhost:27017', {
-            useNewUrlParser: true
+            useNewUrlParser: true,
+            poolSize: 10,
         });
         const database = client.db('node-restapi')
         console.log('db is connected')
