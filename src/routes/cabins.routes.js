@@ -28,12 +28,13 @@ router.get('/busy', async (req, res) => {
 router.post('/', async (req, res) => {
     const db = req.app.locals.database;
     try {
-        const { capacity, deck_id, category } = req.body.cabin;
+        const { capacity, deck_id, category, position } = req.body.cabin;
         const data = {
             capacity: capacity,
             category: category,
             passangers: 0,
-            deck_id: ObjectID(deck_id)
+            deck_id: ObjectID(deck_id),
+            position: position,
         }
         const result = await db.collection(collection).insert(data);
         res.send(result);
