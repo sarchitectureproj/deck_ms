@@ -12,6 +12,7 @@ services:
   db:
     container_name: deck_db
     image: mongo
+    command: mongod --port 27020
     expose:
       - "27020"
     volumes:
