@@ -1,0 +1,188 @@
+#Test with: http://editor.swagger.io/
+
+express: '4.16.4'
+info:
+  version: 1.0.0
+  title: Microservice for decks
+  description: Express.js + MongoDB
+  license:
+    name: Software Architecture 2018-II
+host: 192.168.99.106:4005
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /decks:
+    post:
+      summary: Creates a new deck
+      operationId: createDeck
+      basePath: /opt/app
+      parameters:
+        - floor: 1
+          in: body
+          required: true
+          description: Course Object
+          schema:
+            $ref: '#/definitions/CourseInput'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    get:
+      summary: Returns all decks
+      operationId: getAlldecks
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/CoursesList'
+        '406':
+          description: Not Acceptable (Invalid Params)
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  /courses/{code}:
+    get:
+      summary: Returns a course with the given code
+      operationId: getCourseByCode
+      parameters:
+        - name: code
+          in: path
+          description: The code of the course to be returned
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/Course'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+            description: Not Acceptable (Invalid Params)
+            schema:
+              $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+    put:
+      summary: Updates a course with the given code
+      operationId: updateCourse
+      parameters:
+        - name: code
+          in: path
+          description: The code of the course to be updated
+          required: true
+          type: integer
+        - name: course
+          in: body
+          required: true
+          description: Course Object
+          schema:
+            $ref: '#/definitions/CourseInput'
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+            description: Not Acceptable (Invalid Params)
+            schema:
+              $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+    delete:
+      summary: Deletes a course with the given code
+      operationId: deleteCourse
+      parameters:
+        - name: code
+          in: path
+          description: The code of the course to be deleted
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Ok
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorModel'
+        '406':
+            description: Not Acceptable (Invalid Params)
+            schema:
+              $ref: '#/definitions/ErrorModel'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+definitions:
+
+  # Courses
+  Course:
+    type: object
+    properties:
+      code:
+        type: integer
+      name:
+        type: string
+      credits:
+        type: integer
+
+  CourseInput:
+    type: object
+    properties:
+      name:
+        type: string
+      credits:
+        type: integer
+
+  CoursesList:
+    type: object
+    required:
+      - total
+      - list
+    properties:
+      total:
+        type: number
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/Course'
+
+# Errors
+  ErrorModel:
+    type: object
+    required:
+      - message
+      - code
+    properties:
+      message:
+        type: string
+      code:
+        type: number
+      description:
+        type: object

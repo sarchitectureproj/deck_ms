@@ -13,14 +13,27 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: error.toString() });
     }
 })
+router.get('/busy', async (req, res) => {
+    const db = req.app.locals.database;
+    const query = {"passangers": {$gte: "1"}}
+    try {
+        const result = await db.collection(collection).find(query).toArray();
+        res.json(result);
+    } catch (error) {
+
+        res.status(500).json({ error: error.toString() });
+    }
+})
 
 router.post('/', async (req, res) => {
     const db = req.app.locals.database;
     try {
-        const { capacity, cabin_id } = req.body.cabin;
+        const { capacity, deck_id, category } = req.body.cabin;
         const data = {
             capacity: capacity,
-            cabin_id: ObjectID(cabin_id)
+            category: category,
+            passangers: 0,
+            deck_id: ObjectID(deck_id)
         }
         const result = await db.collection(collection).insert(data);
         res.send(result);
@@ -31,10 +44,12 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     const db = req.app.locals.database;
     const { id } = req.params
-    const { capacity, cabin_id } = req.body.cabin;
+    const { capacity, deck_id, category, passangers } = req.body.cabin;
     const data = {
         capacity: capacity,
-        cabin_id: ObjectID(cabin_id)
+        category: category,
+        deck_id: ObjectID(deck_id),
+        passangers: passangers
     }
     try {
         const result = await db.collection(collection).updateOne({ _id: ObjectID(id) }, { $set: data });

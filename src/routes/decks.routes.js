@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import { connect } from '../database'
 import { ObjectID } from 'mongodb'
 const router = Router();
 const collection = 'decks'
@@ -13,15 +12,35 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: error.toString() });
     }
 })
+router.get('/:id/cabins', async (req, res) => {
+    const db = req.app.locals.database;
+    const { id } = req.params
+    try {
+        const result = await db.collection('cabins').find({ deck_id: ObjectID(id) }).toArray();
+        res.json(result);
+    } catch (error) {
+
+        res.status(500).json({ error: error.toString() });
+    }
+})
 
 router.post('/', async (req, res) => {
     const db = req.app.locals.database;
+    let data;
     try {
-        const { floor, meeting_point_id, meeting_schedule } = req.body.deck;
-        const data = {
-            floor: floor,
-            meeting_schedule: meeting_schedule,
-            meeting_point_id: ObjectID(meeting_point_id)
+        let { floor, meeting_point_id, meeting_schedule } = req.body.deck;
+        if (meeting_point_id !== undefined) {
+            data = {
+                floor: floor,
+                meeting_schedule: meeting_schedule,
+                meeting_point_id: ObjectID(meeting_point_id)
+            }
+        } else {
+            data = {
+                floor: floor,
+                meeting_schedule: meeting_schedule,
+            }
+
         }
         const result = await db.collection(collection).insert(data);
         res.send(result);
