@@ -6,6 +6,6 @@ WORKDIR /opt/app
 
 COPY ./ ./
 RUN npm install
-ENV PORT 8888
-EXPOSE   8888
+ENV PORT 4005
+EXPOSE   4005
 CMD [ "npm", "run", "dev" ]

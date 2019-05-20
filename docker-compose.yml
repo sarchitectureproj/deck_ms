@@ -1,19 +1,19 @@
 version: '2'
 services:
   web:
-    container_name: API_REST
+    container_name: deck_ms
     build: ./
     links:
       - db
     ports:
-      - 8888:8888
+      - 4005:4005
     depends_on:
       - db
   db:
-    container_name: MONGODB
+    container_name: deck_db
     image: mongo
     expose:
-      - "27017"
+      - "27020"
     volumes:
         - mongodata:/data/db
 

@@ -2,7 +2,7 @@ import express, { json } from 'express';
 import {connect} from './database'
 const app = express();
 //Setting
-app.set('port', process.env.PORT || 8888)
+app.set('port', process.env.PORT || 4005)
 
 //connect to database
 // const db = async  () => await connect();
@@ -14,7 +14,8 @@ app.set('port', process.env.PORT || 8888)
 import IndexRoutes from './routes/index.routes'
 import TasksRoutes from './routes/task.routes'
 import MeetingPoints from './routes/meeting_point.routes'
-import MeetingSchedules from './routes/meeting_schedule.routes'
+import Decks from './routes/decks.routes'
+import Cabins from './routes/cabins.routes'
 
 //middlewares
 app.use(json());
@@ -24,7 +25,8 @@ app.use(json());
 app.use(IndexRoutes);
 app.use('/tasks', TasksRoutes);
 app.use('/meeting_points', MeetingPoints);
-app.use('/meeting_schedules', MeetingSchedules);
+app.use('/decks', Decks);
+app.use('/cabins', Cabins);
 
 
 export  default app ;
