@@ -22,7 +22,7 @@ paths:
       summary: Creates a new deck
       operationId: createDeck
       parameters:
-        - name: floor
+        - name: deck
           in: body
           required: true
           description: Deck Object
@@ -43,10 +43,6 @@ paths:
           description: Ok
           schema:
             $ref: '#/definitions/DeckList'
-        '406':
-          description: Not Acceptable (Invalid Params)
-          schema:
-            $ref: '#/definitions/ErrorModel'
         '500':
           description: Internal Server Error
           schema:
@@ -84,7 +80,7 @@ paths:
         - name: deck
           in: body
           required: true
-          description: Course Object
+          description: Deck Object
           schema:
             $ref: '#/definitions/DeckInput'
       responses:
@@ -101,7 +97,7 @@ paths:
       parameters:
         - name: code
           in: path
-          description: The code of the course to be deleted
+          description: The code of the deck to be deleted
           required: true
           type: string
       responses:
@@ -111,17 +107,17 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ErrorModel'
-  /cabin:
+  /cabins:
     post:
-      summary: Creates a new deck
+      summary: Creates a new cabin
       operationId: createCabin
       parameters:
-        - name: capacity
+        - name: cabin
           in: body
           required: true
           description: Cabin Object
           schema:
-            $ref: '#/definitions/DeckInput'
+            $ref: '#/definitions/CabinInput'
       responses:
         '201':
           description: Created
@@ -145,7 +141,7 @@ paths:
   /cabins/{code}:
     get:
       summary: Returns a cabin with the given code
-      operationId: getCourseByCode
+      operationId: getCabinByCode
       parameters:
         - name: code
           in: path
@@ -164,7 +160,7 @@ paths:
 
     put:
       summary: Updates a cabin with the given code
-      operationId: updateCabub
+      operationId: updateCabin
       parameters:
         - name: code
           in: path
@@ -174,7 +170,7 @@ paths:
         - name: deck
           in: body
           required: true
-          description: Course Object
+          description: Cabin Object
           schema:
             $ref: '#/definitions/DeckInput'
       responses:
@@ -191,7 +187,7 @@ paths:
       parameters:
         - name: code
           in: path
-          description: The code of the course to be deleted
+          description: The code of the cabin to be deleted
           required: true
           type: string
       responses:
@@ -201,6 +197,97 @@ paths:
           description: unexpected error
           schema:
             $ref: '#/definitions/ErrorModel'
+  /meeting_points:
+    post:
+      summary: Creates a new meeting point
+      operationId: createMeetingPoint
+      parameters:
+        - name: meeting_point
+          in: body
+          required: true
+          description: MeetingPoint Object
+          schema:
+            $ref: '#/definitions/MeetingPointInput'
+      responses:
+        '201':
+          description: Created
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+    get:
+      summary: Returns all meeting points
+      operationId: getAllMeetingPoints
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/MeetingPoint'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+  /meeting_points/{code}:
+    get:
+      summary: Returns a cabin with the given code
+      operationId: getMeetingPointByCode
+      parameters:
+        - name: code
+          in: path
+          description: The code of the meeting point to be returned
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Ok
+          schema:
+            $ref: '#/definitions/SingleMeetingPoint'
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+    put:
+      summary: Updates a meeting point with the given code
+      operationId: updateCabub
+      parameters:
+        - name: code
+          in: path
+          description: The code of the meeting point to be updated
+          required: true
+          type: string
+        - name: meeting_point
+          in: body
+          required: true
+          description: MeetingPoint Object
+          schema:
+            $ref: '#/definitions/MeetingPointInput'
+      responses:
+        '200':
+          description: ok
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+
+    delete:
+      summary: Deletes a meeting point with the given code
+      operationId: deleteMeetingPoint
+      parameters:
+        - name: code
+          in: path
+          description: The code of the meeting point to be deleted
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Ok
+        '500':
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/ErrorModel'
+  
 
 definitions:
   # Decks
@@ -226,6 +313,11 @@ definitions:
         type: string
       meeting_point_id:
         type: string
+  MeetingPointInput:
+    type: object
+    properties:
+      name:
+        type: string
   Cabin:
     type: object
     properties:
@@ -237,7 +329,11 @@ definitions:
         type: string
       meeting_point_id:
         type: string
-
+  MeetingPoint:
+    type: object
+    properties:
+      name:
+        type: string
   Deck:
     type: object
     properties:
@@ -264,6 +360,14 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Cabin'
+  MeetingPointList:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/MeetingPoint'
+  
           
     
   SingleDeck:
@@ -276,6 +380,11 @@ definitions:
     properties:
       data:
         $ref: '#/definitions/Cabin'
+  SingleMeetingPoint:
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/MeetingPoint'
 
 # Errors
   ErrorModel:
