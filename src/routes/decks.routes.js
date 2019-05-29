@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
 
         }
         const result = await db.collection(collection).insert(data);
-        res.send(result);
+        res.send(result.ops[0]);
     } catch (error) {
         res.status(500).json({ error: error.toString() });
     }
@@ -59,7 +59,7 @@ router.put('/:id', async (req, res) => {
     }
     try {
         const result = await db.collection(collection).updateOne({ _id: ObjectID(id) }, { $set: data });
-        res.send(result);
+        res.send({ id: id });
     } catch (error) {
         res.status(500).json({ error: error.toString() });
     }
@@ -82,10 +82,7 @@ router.delete('/:id', async (req, res) => {
     const db = req.app.locals.database;
     try {
         const result = await db.collection(collection).remove({ _id: ObjectID(id) })
-        res.json({
-            message: `The object ${id} was deleted`,
-            result: result
-        })
+        res.send({ id: id })
     } catch (error) {
         res.status(500).json({ error: error.toString() });
     }

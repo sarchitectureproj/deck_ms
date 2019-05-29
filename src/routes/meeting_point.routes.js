@@ -1,4 +1,4 @@
-import  express , { Router } from 'express'
+import express, { Router } from 'express'
 import { connect } from '../database'
 import { ObjectID } from 'mongodb'
 //import {db} from '../server'
@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
         const result = await db.collection(collection).find({}).toArray();
         res.json(result);
     } catch (error) {
-        
+
         res.status(500).json({ error: error.toString() });
     }
 })
@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
             name: name,
         }
         const result = await db.collection(collection).insert(data);
-        res.send(result);
+        res.send(result.ops[0]);
     } catch (error) {
         res.status(500).json({ error: error.toString() });
     }
@@ -38,7 +38,7 @@ router.put('/:id', async (req, res) => {
             name: name,
         }
         const result = await db.collection(collection).updateOne({ _id: ObjectID(id) }, { $set: data });
-        res.send(result);
+        res.send({ id: id });
     } catch (error) {
         res.status(500).json({ error: error.toString() });
     }
@@ -54,7 +54,7 @@ router.get('/:id', async (req, res) => {
         res.status(500).json({ error: error.toString() });
 
     }
-    
+
 })
 
 router.delete('/:id', async (req, res) => {
@@ -62,9 +62,8 @@ router.delete('/:id', async (req, res) => {
     const db = req.app.locals.database;
     try {
         const result = await db.collection(collection).remove({ _id: ObjectID(id) })
-        res.json({
-            message: `The object ${id} was deleted`,
-            result: result
+        res.send({
+            id: id
         })
     } catch (error) {
         res.status(500).json({ error: error.toString() });
