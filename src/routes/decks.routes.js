@@ -52,11 +52,17 @@ router.put('/:id', async (req, res) => {
     const db = req.app.locals.database;
     const { id } = req.params
     const { floor, meeting_point_id, meeting_schedule } = req.body.deck;
-    const data = {
-        floor: floor,
-        meeting_schedule: meeting_schedule,
-        meeting_point_id: ObjectID(meeting_point_id)
-    }
+    if (meeting_point_id !== undefined) {
+        data = {
+            floor: floor,
+            meeting_schedule: meeting_schedule,
+            meeting_point_id: ObjectID(meeting_point_id)
+        }
+    } else {
+        data = {
+            floor: floor,
+            meeting_schedule: meeting_schedule,
+        }
     try {
         const result = await db.collection(collection).updateOne({ _id: ObjectID(id) }, { $set: data });
         const result2 = await db.collection(collection).findOne({ _id: ObjectID(id) });
