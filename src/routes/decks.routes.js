@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
                 floor: floor,
                 meeting_schedule: meeting_schedule,
             }
-
+            
         }
         const result = await db.collection(collection).insert(data);
         res.send(result.ops[0]);
@@ -59,7 +59,8 @@ router.put('/:id', async (req, res) => {
     }
     try {
         const result = await db.collection(collection).updateOne({ _id: ObjectID(id) }, { $set: data });
-        res.send({ id: id });
+        const result2 = await db.collection(collection).findOne({ _id: ObjectID(id) });
+        res.json(result2);
     } catch (error) {
         res.status(500).json({ error: error.toString() });
     }
